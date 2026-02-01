@@ -14,7 +14,7 @@ export class AppError extends Error {
 }
 
 export const errorHandler = (
-  err: Error | AppError,
+  err: Error | AppError | any,
   _req: Request,
   res: Response,
   _next: NextFunction
@@ -23,6 +23,30 @@ export const errorHandler = (
     logger.error(`${err.statusCode} - ${err.message}`, err);
     res.status(err.statusCode).json({
       error: err.message,
+    });
+    return;
+  }
+
+  if (err.name === 'ValidationError') {
+    logger.error(`Validation Error: ${err.message}`, err);
+    res.status(400).json({
+      error: err.message,
+    });
+    return;
+  }
+
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    logger.error(`Unique Constraint Error: ${err.message}`, err);
+    res.status(400).json({
+      error: 'A record with this email already exists',
+    });
+    return;
+  }
+
+  if (err.name === 'SequelizeDatabaseError') {
+    logger.error(`Database Error: ${err.message}`, err);
+    res.status(500).json({
+      error: 'Database error occurred',
     });
     return;
   }

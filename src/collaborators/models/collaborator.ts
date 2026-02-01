@@ -1,13 +1,22 @@
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
 import { sequelize } from "../../config/database";
 
-class Collaborator extends Model {
+class Collaborator extends Model<
+  InferAttributes<Collaborator>,
+  InferCreationAttributes<Collaborator>
+> {
   declare id: string;
   declare name: string;
   declare email: string;
   declare city: string;
   declare company: string;
   declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 Collaborator.init(
@@ -49,8 +58,13 @@ Collaborator.init(
     },
     createdAt: {
       type: DataTypes.DATE,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
-      field: "created_at",
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
