@@ -1,6 +1,7 @@
 import { Op, CreationAttributes } from 'sequelize';
 import Collaborator from '../models/collaborator';
 import ExternalApiService from './external-api-service';
+import CollaboratorRepository from '../repositories/collaborator-repository';
 import { AppError } from '../../shared/middleware/error-handler';
 import {
   ImportResponse,
@@ -12,19 +13,24 @@ import logger from '../../shared/utils/logger';
 
 class CollaboratorService {
   private externalApiService: ExternalApiService;
+  private collaboratorRepository: CollaboratorRepository;
 
-  constructor(externalApiService?: ExternalApiService) {
+  constructor(
+    externalApiService?: ExternalApiService,
+    collaboratorRepository?: CollaboratorRepository
+  ) {
     this.externalApiService = externalApiService || new ExternalApiService();
+    this.collaboratorRepository =
+      collaboratorRepository || new CollaboratorRepository();
   }
 
   async importCollaborators(): Promise<ImportResponse> {
-    logger.info('Fetching users from external API');
     const users = await this.externalApiService.fetchUsers();
     logger.info(`Fetched ${users.length} users from external API`);
 
     const usersEmailsList = users.map((user) => user.email);
-    logger.debug('Checking for existing emails');
-    const existingEmails = await Collaborator.findAll({
+
+    const existingEmails = await this.collaboratorRepository.findAll({
       attributes: ['email'],
       where: {
         email: {
@@ -39,8 +45,7 @@ class CollaboratorService {
     const newUsers = users.filter((u) => !existingEmailSet.has(u.email));
     logger.info(`Found ${newUsers.length} new users to import`);
 
-    logger.debug('Creating new collaborators in database');
-    await Collaborator.bulkCreate(
+    await this.collaboratorRepository.bulkCreate(
       newUsers as CreationAttributes<Collaborator>[],
       {
         ignoreDuplicates: true,
@@ -80,7 +85,7 @@ class CollaboratorService {
       };
     }
 
-    const { count, rows } = await Collaborator.findAndCountAll({
+    const { count, rows } = await this.collaboratorRepository.findAndCountAll({
       where,
       limit: limitNum,
       offset,
@@ -101,7 +106,7 @@ class CollaboratorService {
 
   async getCollaboratorById(id: string): Promise<CollaboratorResponse> {
     logger.debug(`Fetching collaborator with id: ${id}`);
-    const collaborator = await Collaborator.findByPk(id);
+    const collaborator = await this.collaboratorRepository.findByPk(id);
 
     if (!collaborator) {
       logger.warn(`Collaborator not found with id: ${id}`);
@@ -114,7 +119,7 @@ class CollaboratorService {
 
   async deleteCollaborator(id: string): Promise<void> {
     logger.debug(`Fetching collaborator for deletion with id: ${id}`);
-    const collaborator = await Collaborator.findByPk(id);
+    const collaborator = await this.collaboratorRepository.findByPk(id);
 
     if (!collaborator) {
       logger.warn(`Collaborator not found for deletion with id: ${id}`);
@@ -122,7 +127,7 @@ class CollaboratorService {
     }
 
     logger.debug(`Deleting collaborator with id: ${id}`);
-    await collaborator.destroy();
+    await this.collaboratorRepository.destroy(collaborator);
     logger.info(`Collaborator deleted successfully with id: ${id}`);
   }
 }
