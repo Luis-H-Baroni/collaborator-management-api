@@ -38,7 +38,7 @@ export const errorHandler = (
   if (err.name === 'SequelizeUniqueConstraintError') {
     logger.error(`Unique Constraint Error: ${err.message}`, err);
     res.status(400).json({
-      error: 'A record with this email already exists',
+      error: 'Constraint violation',
     });
     return;
   }
