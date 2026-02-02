@@ -1,5 +1,5 @@
 {
-  "name": "teste-backend",
+  "name": "collaborator-management-api",
   "version": "1.0.0",
   "description": "API REST para gerenciamento de colaboradores.",
   "main": "index.js",
