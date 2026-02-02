@@ -1,7 +1,11 @@
 import request from 'supertest';
 import app from '../../src/app';
+import { sequelize } from '../../src/config/database';
 
 describe('Error Handling Integration Tests', () => {
+  afterAll(async () => {
+    await sequelize.close();
+  });
   describe('404 Not Found', () => {
     it('should return 404 for non-existent routes', async () => {
       const response = await request(app).get('/api/non-existent');

@@ -67,7 +67,7 @@ describe('error-handler middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'A record with this email already exists',
+        error: 'Constraint violation',
       });
     });
 

@@ -1,12 +1,17 @@
 import request from 'supertest';
 import app from '../../src/app';
 import Collaborator from '../../src/collaborators/models/collaborator';
+import { sequelize } from '../../src/config/database';
 
 jest.mock('../../src/collaborators/models/collaborator');
 
 describe('Collaborators API Integration Tests', () => {
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    await sequelize.close();
   });
 
   describe('GET /collaborators/health', () => {

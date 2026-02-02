@@ -10,4 +10,8 @@ describe('database config', () => {
     expect(sequelize).toBeDefined();
     expect(typeof sequelize.authenticate).toBe('function');
   });
+
+  afterAll(async () => {
+    await sequelize.close();
+  });
 });
