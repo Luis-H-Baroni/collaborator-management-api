@@ -202,70 +202,47 @@ describe('collaborator-service', () => {
       });
 
       it('should handle negative page number', async () => {
-        (Collaborator.findAndCountAll as jest.Mock).mockResolvedValue({
-          rows: [],
-          count: 0,
-        });
-
-        const result = await service.listCollaborators({ page: '-1' });
-
-        expect(Collaborator.findAndCountAll).toHaveBeenCalledWith({
-          where: {},
-          limit: 10,
-          offset: expect.any(Number),
-          order: [['createdAt', 'DESC']],
-        });
-        expect(result.pagination.page).toBe(-1);
+        await expect(service.listCollaborators({ page: '-1' })).rejects.toThrow(
+          'Page must be a positive integer'
+        );
       });
 
       it('should handle zero limit', async () => {
-        (Collaborator.findAndCountAll as jest.Mock).mockResolvedValue({
-          rows: [],
-          count: 0,
-        });
-
-        const result = await service.listCollaborators({ limit: '0' });
-
-        expect(Collaborator.findAndCountAll).toHaveBeenCalledWith({
-          where: {},
-          limit: 0,
-          offset: 0,
-          order: [['createdAt', 'DESC']],
-        });
-        expect(result.pagination.limit).toBe(0);
+        await expect(service.listCollaborators({ limit: '0' })).rejects.toThrow(
+          'Limit must be a positive integer between 1 and 100'
+        );
       });
 
       it('should handle negative limit', async () => {
-        (Collaborator.findAndCountAll as jest.Mock).mockResolvedValue({
-          rows: [],
-          count: 0,
-        });
-
-        const result = await service.listCollaborators({ limit: '-5' });
-
-        expect(Collaborator.findAndCountAll).toHaveBeenCalledWith({
-          where: {},
-          limit: -5,
-          offset: expect.any(Number),
-          order: [['createdAt', 'DESC']],
-        });
-        expect(result.pagination.limit).toBe(-5);
+        await expect(
+          service.listCollaborators({ limit: '-5' })
+        ).rejects.toThrow('Limit must be a positive integer between 1 and 100');
       });
 
       it('should handle very large page and limit values', async () => {
+        await expect(
+          service.listCollaborators({ page: '999999', limit: '1000000' })
+        ).rejects.toThrow('Limit must be a positive integer between 1 and 100');
+      });
+
+      it('should accept valid boundary values', async () => {
         (Collaborator.findAndCountAll as jest.Mock).mockResolvedValue({
           rows: [],
           count: 0,
         });
 
-        await service.listCollaborators({ page: '999999', limit: '1000000' });
+        const result = await service.listCollaborators({
+          page: '1',
+          limit: '100',
+        });
 
         expect(Collaborator.findAndCountAll).toHaveBeenCalledWith({
           where: {},
-          limit: 1000000,
-          offset: expect.any(Number),
+          limit: 100,
+          offset: 0,
           order: [['createdAt', 'DESC']],
         });
+        expect(result.pagination.limit).toBe(100);
       });
 
       it('should handle database error in findAndCountAll', async () => {

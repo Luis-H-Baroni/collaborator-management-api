@@ -75,6 +75,18 @@ class CollaboratorService {
     logger.debug('Listing collaborators with params', queryParams);
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
+
+    if (isNaN(pageNum) || pageNum < 1) {
+      throw new AppError('Page must be a positive integer', 400);
+    }
+
+    if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+      throw new AppError(
+        'Limit must be a positive integer between 1 and 100',
+        400
+      );
+    }
+
     const offset = (pageNum - 1) * limitNum;
 
     const where: Record<string, any> = {};
