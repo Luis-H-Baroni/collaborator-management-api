@@ -1,12 +1,8 @@
 import { Router } from 'express';
-import {
-  importCollaborators,
-  listCollaborators,
-  getCollaboratorById,
-  deleteCollaborator,
-} from '../controllers/collaborator-controller';
+import CollaboratorController from '../controllers/collaborator-controller';
 
 const router = Router();
+const collaboratorController = new CollaboratorController();
 
 /**
  * @swagger
@@ -50,7 +46,10 @@ router.get('/health', (_req, res) => {
  *                 ignored:
  *                   type: number
  */
-router.post('/import', importCollaborators);
+router.post(
+  '/import',
+  collaboratorController.importCollaborators.bind(collaboratorController)
+);
 
 /**
  * @swagger
@@ -108,7 +107,10 @@ router.post('/import', importCollaborators);
  *                     totalPages:
  *                       type: integer
  */
-router.get('/', listCollaborators);
+router.get(
+  '/',
+  collaboratorController.listCollaborators.bind(collaboratorController)
+);
 
 /**
  * @swagger
@@ -133,7 +135,10 @@ router.get('/', listCollaborators);
  *       404:
  *         description: Collaborator not found
  */
-router.get('/:id', getCollaboratorById);
+router.get(
+  '/:id',
+  collaboratorController.getCollaboratorById.bind(collaboratorController)
+);
 
 /**
  * @swagger
@@ -154,7 +159,10 @@ router.get('/:id', getCollaboratorById);
  *       404:
  *         description: Collaborator not found
  */
-router.delete('/:id', deleteCollaborator);
+router.delete(
+  '/:id',
+  collaboratorController.deleteCollaborator.bind(collaboratorController)
+);
 
 /**
  * @swagger

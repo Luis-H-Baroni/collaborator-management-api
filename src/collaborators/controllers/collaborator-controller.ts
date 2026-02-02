@@ -1,61 +1,70 @@
-import { Request, Response, NextFunction } from "express";
-import {
-  importCollaborators as importCollaboratorsService,
-  listCollaborators as listCollaboratorsService,
-  getCollaboratorById as getCollaboratorByIdService,
-  deleteCollaborator as deleteCollaboratorService,
-} from "../services/collaborator-service";
+import { Request, Response, NextFunction } from 'express';
+import CollaboratorService from '../services/collaborator-service';
 
-export const importCollaborators = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const result = await importCollaboratorsService();
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+class CollaboratorController {
+  private collaboratorService: CollaboratorService;
 
-export const listCollaborators = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const result = await listCollaboratorsService(req.query);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
+  constructor(collaboratorService?: CollaboratorService) {
+    this.collaboratorService = collaboratorService || new CollaboratorService();
   }
-};
 
-export const getCollaboratorById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const result = await getCollaboratorByIdService(id as string);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
+  async importCollaborators(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const result = await this.collaboratorService.importCollaborators();
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
   }
-};
 
-export const deleteCollaborator = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    await deleteCollaboratorService(id as string);
-    res.status(204).send();
-  } catch (error) {
-    next(error);
+  async listCollaborators(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const result = await this.collaboratorService.listCollaborators(
+        req.query
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
   }
-};
+
+  async getCollaboratorById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const result = await this.collaboratorService.getCollaboratorById(
+        id as string
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteCollaborator(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      await this.collaboratorService.deleteCollaborator(id as string);
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+export default CollaboratorController;

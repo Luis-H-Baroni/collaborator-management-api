@@ -1,4 +1,4 @@
-import { importCollaborators } from '../collaborators/services/collaborator-service';
+import CollaboratorService from '../collaborators/services/collaborator-service';
 import { testConnection, sequelize } from '../config/database';
 import logger from '../shared/utils/logger';
 
@@ -12,7 +12,8 @@ const seed = async (): Promise<void> => {
 
     logger.info('Importing collaborators from external API...');
 
-    const result = await importCollaborators();
+    const collaboratorService = new CollaboratorService();
+    const result = await collaboratorService.importCollaborators();
 
     logger.info(`Seed completed successfully:`);
     logger.info(`  - Imported: ${result.imported}`);
