@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../../shared/utils/logger';
 
 interface ExternalUser {
   id: number;
@@ -30,10 +31,14 @@ class ExternalApiService {
 
   async fetchUsers(): Promise<MappedUser[]> {
     try {
+      logger.info(`Fetching users from external API: ${this.apiUrl}`);
       const response = await axios.get<ExternalUser[]>(this.apiUrl, {
         timeout: this.timeout,
       });
 
+      logger.info(
+        `Successfully fetched ${response.data.length} users from external API`
+      );
       return response.data.map((user) => ({
         name: user.name,
         email: user.email,
@@ -41,6 +46,7 @@ class ExternalApiService {
         company: user.company.name,
       }));
     } catch (error) {
+      logger.error('Error fetching users from external API', error);
       if (axios.isAxiosError(error)) {
         throw new Error(
           `Failed to fetch users from external API: ${error.message}`

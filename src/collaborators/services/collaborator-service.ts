@@ -8,6 +8,7 @@ import {
   CollaboratorResponse,
   PaginatedResponse,
 } from '../dto/collaborator-dto';
+import logger from '../../shared/utils/logger';
 
 class CollaboratorService {
   private externalApiService: ExternalApiService;
@@ -17,9 +18,12 @@ class CollaboratorService {
   }
 
   async importCollaborators(): Promise<ImportResponse> {
+    logger.info('Fetching users from external API');
     const users = await this.externalApiService.fetchUsers();
+    logger.info(`Fetched ${users.length} users from external API`);
 
     const usersEmailsList = users.map((user) => user.email);
+    logger.debug('Checking for existing emails');
     const existingEmails = await Collaborator.findAll({
       attributes: ['email'],
       where: {
@@ -33,7 +37,9 @@ class CollaboratorService {
       existingEmails.map((collaborator) => collaborator.email)
     );
     const newUsers = users.filter((u) => !existingEmailSet.has(u.email));
+    logger.info(`Found ${newUsers.length} new users to import`);
 
+    logger.debug('Creating new collaborators in database');
     await Collaborator.bulkCreate(
       newUsers as CreationAttributes<Collaborator>[],
       {
@@ -41,6 +47,9 @@ class CollaboratorService {
       }
     );
 
+    logger.info(
+      `Import completed: ${newUsers.length} imported, ${users.length - newUsers.length} ignored`
+    );
     return {
       imported: newUsers.length,
       ignored: users.length - newUsers.length,
@@ -58,6 +67,7 @@ class CollaboratorService {
       order = 'DESC',
     } = queryParams;
 
+    logger.debug('Listing collaborators with params', queryParams);
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
     const offset = (pageNum - 1) * limitNum;
@@ -77,6 +87,7 @@ class CollaboratorService {
       order: [[sort, order.toUpperCase()]],
     });
 
+    logger.info(`Found ${count} total collaborators, returning ${rows.length}`);
     return {
       data: rows as CollaboratorResponse[],
       pagination: {
@@ -89,23 +100,30 @@ class CollaboratorService {
   }
 
   async getCollaboratorById(id: string): Promise<CollaboratorResponse> {
+    logger.debug(`Fetching collaborator with id: ${id}`);
     const collaborator = await Collaborator.findByPk(id);
 
     if (!collaborator) {
+      logger.warn(`Collaborator not found with id: ${id}`);
       throw new AppError('Collaborator not found', 404);
     }
 
+    logger.info(`Collaborator found with id: ${id}`);
     return collaborator as CollaboratorResponse;
   }
 
   async deleteCollaborator(id: string): Promise<void> {
+    logger.debug(`Fetching collaborator for deletion with id: ${id}`);
     const collaborator = await Collaborator.findByPk(id);
 
     if (!collaborator) {
+      logger.warn(`Collaborator not found for deletion with id: ${id}`);
       throw new AppError('Collaborator not found', 404);
     }
 
+    logger.debug(`Deleting collaborator with id: ${id}`);
     await collaborator.destroy();
+    logger.info(`Collaborator deleted successfully with id: ${id}`);
   }
 }
 
