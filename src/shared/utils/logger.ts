@@ -17,7 +17,10 @@ const logger = {
   },
   debug: (message: string, ...args: any[]): void => {
     if (logLevel === 'debug') {
-      console.debug(`[DEBUG] ${new Date().toISOString()} - ${message}`, ...args);
+      console.debug(
+        `[DEBUG] ${new Date().toISOString()} - ${message}`,
+        ...args
+      );
     }
   },
 };

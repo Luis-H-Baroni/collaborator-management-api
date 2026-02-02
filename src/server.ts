@@ -1,7 +1,7 @@
-import http from "http";
-import app, { initializeDatabase } from "./app";
-import config from "./config/env";
-import logger from "./shared/utils/logger";
+import http from 'http';
+import app, { initializeDatabase } from './app';
+import config from './config/env';
+import logger from './shared/utils/logger';
 
 const server = http.createServer(app);
 

@@ -3,8 +3,8 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-} from "sequelize";
-import { sequelize } from "../../config/database";
+} from 'sequelize';
+import { sequelize } from '../../config/database';
 
 class Collaborator extends Model<
   InferAttributes<Collaborator>,
@@ -31,7 +31,7 @@ Collaborator.init(
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Name cannot be empty",
+          msg: 'Name cannot be empty',
         },
       },
     },
@@ -41,10 +41,10 @@ Collaborator.init(
       unique: true,
       validate: {
         isEmail: {
-          msg: "Invalid email format",
+          msg: 'Invalid email format',
         },
         notEmpty: {
-          msg: "Email cannot be empty",
+          msg: 'Email cannot be empty',
         },
       },
     },
@@ -69,11 +69,11 @@ Collaborator.init(
   },
   {
     sequelize,
-    tableName: "collaborators",
-    modelName: "Collaborator",
+    tableName: 'collaborators',
+    modelName: 'Collaborator',
     timestamps: false,
     underscored: true,
-  },
+  }
 );
 
 export default Collaborator;
