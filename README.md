@@ -1,49 +1,49 @@
 # Collaborators API
 
-API REST para gerenciamento de colaboradores com persistência em banco de dados e consumo de API externa.
+REST API for collaborator management with database persistence and external API consumption.
 
-## Tecnologias
+## Technologies
 
 - **Runtime:** Node.js
 - **Framework:** Express
-- **Linguagem:** TypeScript
-- **Banco de Dados:** PostgreSQL
+- **Language:** TypeScript
+- **Database:** PostgreSQL
 - **ORM:** Sequelize
-- **Testes:** Jest, Supertest
-- **Documentação:** Swagger/OpenAPI
-- **API Externa:** JSONPlaceholder (https://jsonplaceholder.typicode.com/users)
+- **Testing:** Jest, Supertest
+- **Documentation:** Swagger/OpenAPI
+- **External API:** JSONPlaceholder (https://jsonplaceholder.typicode.com/users)
 - **Docker:** Docker & Docker Compose
 
-## Instalação
+## Installation
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js (v20 ou superior)
-- PostgreSQL (ou usar Docker)
-- npm ou yarn
+- Node.js (v20 or higher)
+- PostgreSQL (or use Docker)
+- npm or yarn
 
-### Passo 1: Clonar o repositório
+### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/Luis-H-Baroni/collaborator-management-api.git
 cd collaborator-management-api
 ```
 
-### Passo 2: Instalar dependências
+### Step 2: Install dependencies
 
 ```bash
 npm install
 ```
 
-### Passo 3: Configurar variáveis de ambiente
+### Step 3: Configure environment variables
 
-Copie o arquivo `.env.example` para `.env` e configure as variáveis:
+Copy the `.env.example` file to `.env` and configure the variables:
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` com suas configurações:
+Edit the `.env` file with your configurations:
 
 ```env
 # Server
@@ -58,45 +58,45 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=teste_backend
 ```
 
-### Passo 4: Executar o banco de dados
+### Step 4: Run the database
 
-#### Opção A: Usar Docker Compose (Recomendado)
+#### Option A: Use Docker Compose (Recommended)
 
 ```bash
 npm run docker:up
 ```
 
-Isso iniciará o PostgreSQL em um container Docker.
+This will start PostgreSQL in a Docker container.
 
-#### Opção B: PostgreSQL Local
+#### Option B: Local PostgreSQL
 
-Certifique-se de que o PostgreSQL está rodando e crie o banco de dados:
+Make sure PostgreSQL is running and create the database:
 
 ```sql
 CREATE DATABASE teste_backend;
 ```
 
-### Passo 5: Executar migrações ou seed
+### Step 5: Run migrations or seed
 
-Para popular o banco de dados com dados iniciais:
+To populate the database with initial data:
 
 ```bash
 npm run seed
 ```
 
-Isso importará colaboradores da API externa (JSONPlaceholder).
+This will import collaborators from the external API (JSONPlaceholder).
 
-## Execução
+## Execution
 
-### Desenvolvimento
+### Development
 
 ```bash
 npm run dev
 ```
 
-A API estará disponível em http://localhost:3000
+The API will be available at http://localhost:3000
 
-### Produção
+### Production
 
 ```bash
 npm run build
@@ -109,30 +109,30 @@ npm start
 npm run docker:up
 ```
 
-A aplicação e o PostgreSQL estarão rodando em containers.
+The application and PostgreSQL will be running in containers.
 
-## Scripts Disponíveis
+## Available Scripts
 
-| Comando                 | Descrição                                                |
-| ----------------------- | -------------------------------------------------------- |
-| `npm run dev`           | Inicia o servidor em modo desenvolvimento com hot-reload |
-| `npm run build`         | Compila TypeScript para JavaScript                       |
-| `npm start`             | Inicia o servidor em modo produção                       |
-| `npm test`              | Executa os testes                                        |
-| `npm run test:watch`    | Executa os testes em modo watch                          |
-| `npm run test:coverage` | Executa os testes com relatório de cobertura             |
-| `npm run lint`          | Executa o ESLint                                         |
-| `npm run format`        | Formata o código com Prettier                            |
-| `npm run docker:up`     | Inicia containers Docker (app + postgres)                |
-| `npm run docker:down`   | Para containers Docker                                   |
-| `npm run docker:logs`   | Visualiza logs dos containers Docker                     |
-| `npm run seed`          | Popula o banco de dados com dados iniciais               |
+| Command                 | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `npm run dev`           | Starts server in development mode with hot-reload |
+| `npm run build`         | Compiles TypeScript to JavaScript                 |
+| `npm start`             | Starts server in production mode                  |
+| `npm test`              | Runs tests                                        |
+| `npm run test:watch`    | Runs tests in watch mode                          |
+| `npm run test:coverage` | Runs tests with coverage report                   |
+| `npm run lint`          | Runs ESLint                                       |
+| `npm run format`        | Formats code with Prettier                        |
+| `npm run docker:up`     | Starts Docker containers (app + postgres)         |
+| `npm run docker:down`   | Stops Docker containers                           |
+| `npm run docker:logs`   | View Docker container logs                        |
+| `npm run seed`          | Populates database with initial data              |
 
 ## API Endpoints
 
-### Documentação
+### Documentation
 
-A documentação completa da API está disponível via Swagger UI:
+The complete API documentation is available via Swagger UI:
 
 http://localhost:3000/api-docs
 
@@ -144,9 +144,9 @@ http://localhost:3000/api-docs
 GET /collaborators/health
 ```
 
-Verifica se a API está rodando.
+Checks if the API is running.
 
-**Resposta:**
+**Response:**
 
 ```json
 {
@@ -155,15 +155,15 @@ Verifica se a API está rodando.
 }
 ```
 
-#### Importar Colaboradores
+#### Import Collaborators
 
 ```http
 POST /collaborators/import
 ```
 
-Importa colaboradores da API externa (JSONPlaceholder).
+Imports collaborators from the external API (JSONPlaceholder).
 
-**Resposta:**
+**Response:**
 
 ```json
 {
@@ -172,38 +172,38 @@ Importa colaboradores da API externa (JSONPlaceholder).
 }
 ```
 
-#### Listar Colaboradores
+#### List Collaborators
 
 ```http
 GET /collaborators?page=1&limit=10&search=joao&sort=name&order=asc
 ```
 
-Lista colaboradores com paginação, filtro e ordenação.
+Lists collaborators with pagination, filtering, and sorting.
 
 **Query Parameters:**
 
-- `page`: Página atual (padrão: 1, mínimo: 1)
-- `limit`: Itens por página (padrão: 10, intervalo: 1-100)
-- `search`: Filtra por nome (case-insensitive)
-- `sort`: Campo para ordenação (padrão: createdAt)
-- `order`: Direção da ordenação: asc ou desc (padrão: desc)
+- `page`: Current page (default: 1, minimum: 1)
+- `limit`: Items per page (default: 10, range: 1-100)
+- `search`: Filter by name (case-insensitive)
+- `sort`: Field for sorting (default: createdAt)
+- `order`: Sort direction: asc or desc (default: desc)
 
-**Validação:**
+**Validation:**
 
-- `page` deve ser um inteiro positivo (>= 1)
-- `limit` deve ser um inteiro entre 1 e 100
+- `page` must be a positive integer (>= 1)
+- `limit` must be an integer between 1 and 100
 
-**Resposta:**
+**Response:**
 
 ```json
 {
   "data": [
     {
       "id": "uuid",
-      "name": "Nome do Colaborador",
+      "name": "Collaborator Name",
       "email": "email@example.com",
-      "city": "Cidade",
-      "company": "Empresa",
+      "city": "City",
+      "company": "Company",
       "createdAt": "2024-01-01T00:00:00.000Z"
     }
   ],
@@ -216,56 +216,56 @@ Lista colaboradores com paginação, filtro e ordenação.
 }
 ```
 
-#### Buscar Colaborador por ID
+#### Get Collaborator by ID
 
 ```http
 GET /collaborators/:id
 ```
 
-Retorna um colaborador específico pelo UUID.
+Returns a specific collaborator by UUID.
 
-**Resposta:**
+**Response:**
 
 ```json
 {
   "id": "uuid",
-  "name": "Nome do Colaborador",
+  "name": "Collaborator Name",
   "email": "email@example.com",
-  "city": "Cidade",
-  "company": "Empresa",
+  "city": "City",
+  "company": "Company",
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-#### Deletar Colaborador
+#### Delete Collaborator
 
 ```http
 DELETE /collaborators/:id
 ```
 
-Remove um colaborador pelo UUID.
+Removes a collaborator by UUID.
 
-**Resposta:** 204 No Content
+**Response:** 204 No Content
 
-## Tratamento de Erros
+## Error Handling
 
-A API retorna os seguintes códigos de status HTTP:
+The API returns the following HTTP status codes:
 
-- `200` - Sucesso
-- `204` - Sucesso sem conteúdo (DELETE)
-- `400` - Requisição inválida (validação, email duplicado)
-- `404` - Registro não encontrado
-- `500` - Erro interno do servidor
+- `200` - Success
+- `204` - Success without content (DELETE)
+- `400` - Bad request (validation, duplicate email)
+- `404` - Record not found
+- `500` - Internal server error
 
-**Formato de Erro:**
+**Error Format:**
 
 ```json
 {
-  "error": "Mensagem de erro"
+  "error": "Error message"
 }
 ```
 
-**Exemplos de Erro 400 (Validação):**
+**Error 400 Examples (Validation):**
 
 ```json
 {
@@ -279,7 +279,7 @@ A API retorna os seguintes códigos de status HTTP:
 }
 ```
 
-**Exemplo de Erro 404 (Não encontrado):**
+**Error 404 Example (Not found):**
 
 ```json
 {
@@ -287,68 +287,68 @@ A API retorna os seguintes códigos de status HTTP:
 }
 ```
 
-## Testes
+## Tests
 
-Para executar os testes:
+To run the tests:
 
 ```bash
-# Executar todos os testes
+# Run all tests
 npm test
 
-# Executar em modo watch
+# Run in watch mode
 npm run test:watch
 
-# Executar com cobertura de código
+# Run with code coverage
 npm run test:coverage
 ```
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 src/
 ├── config/
-│   ├── database.ts       # Configuração do Sequelize
-│   ├── env.ts           # Variáveis de ambiente
-│   └── swagger.ts       # Configuração do Swagger
+│   ├── database.ts       # Sequelize configuration
+│   ├── env.ts           # Environment variables
+│   └── swagger.ts       # Swagger configuration
 ├── collaborators/
-│   ├── controllers/      # Controladores HTTP
+│   ├── controllers/      # HTTP controllers
 │   ├── dto/             # Data Transfer Objects
-│   ├── models/          # Modelos Sequelize
-│   ├── repositories/    # Acesso ao banco de dados
-│   ├── routes/          # Definições de rotas Express
-│   └── services/        # Lógica de negócio e integrações
+│   ├── models/          # Sequelize models
+│   ├── repositories/    # Database access
+│   ├── routes/          # Express route definitions
+│   └── services/        # Business logic and integrations
 ├── shared/
-│   ├── middleware/      # Middleware global (error handling)
-│   ├── types/           # Tipos TypeScript compartilhados
-│   └── utils/           # Utilitários (logger)
+│   ├── middleware/      # Global middleware (error handling)
+│   ├── types/           # Shared TypeScript types
+│   └── utils/           # Utilities (logger)
 ├── scripts/
-│   └── seed.ts          # Script de seed do banco de dados
-├── app.ts               # Configuração do Express
-├── server.ts            # Servidor HTTP
+│   └── seed.ts          # Database seed script
+├── app.ts               # Express configuration
+├── server.ts            # HTTP server
 └── index.ts             # Entry point
 ```
 
 ## Docker
 
-### Arquivos Docker
+### Docker Files
 
-- `Dockerfile` - Imagem da aplicação
-- `docker-compose.yml` - Orquestração de serviços (app + postgres)
+- `Dockerfile` - Application image
+- `docker-compose.yml` - Service orchestration (app + postgres)
 
-### Comandos
+### Commands
 
 ```bash
-# Iniciar serviços
+# Start services
 npm run docker:up
 
-# Parar serviços
+# Stop services
 npm run docker:down
 
-# Visualizar logs
+# View logs
 npm run docker:logs
 ```
 
-## Desenvolvimento
+## Development
 
 ### Linting
 
@@ -356,13 +356,13 @@ npm run docker:logs
 npm run lint
 ```
 
-### Formatação
+### Formatting
 
 ```bash
 npm run format
 ```
 
-Formata todo o código com Prettier usando as configurações em `.prettierrc`.
+Formats all code with Prettier using configurations in `.prettierrc`.
 
 ### Build
 
@@ -370,4 +370,4 @@ Formata todo o código com Prettier usando as configurações em `.prettierrc`.
 npm run build
 ```
 
-Compila TypeScript para JavaScript. O código compilado estará na pasta `dist/`.
+Compiles TypeScript to JavaScript. The compiled code will be in the `dist/` folder.
